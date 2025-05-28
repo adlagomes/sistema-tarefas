@@ -1,0 +1,99 @@
+<div class="container">
+  <h1>Lista de Tarefas</h1>
+
+  <div class="filtro-status">
+    <label for="statusFiltro">Filtrar por status:</label>
+    <select id="statusFiltro" [(ngModel)]="statusSelecionado" (change)="filtrarTarefas()" name="statusFiltro">
+      <option value="">Todos</option>
+      <option value="1">A fazer</option>
+      <option value="2">Em andamento</option>
+      <option value="3">Concluído</option>
+    </select>
+  </div>
+
+  <div class="tarefas-lista">
+    <table *ngIf="tarefasFiltradas.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th>Status</th>
+          <th>ID Usuário</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tarefa of tarefasFiltradas">
+          <td>{{ tarefa.id }}</td>
+          <td>{{ tarefa.nome }}</td>
+          <td>{{ tarefa.descricao}}</td>
+          <td>{{ getStatusText(tarefa.status) }}</td>
+          <td>{{ tarefa.usuarioId || '-' }}</td>
+          <td>
+            <button (click)="deleteTarefas(tarefa.id)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="tarefasFiltradas.length === 0 && tarefas.length > 0">Nenhuma tarefa encontada.</p>
+  </div>
+
+  <div class="nova-tarefa">
+    <h2>Nova Tarefa</h2>
+    <form #tarefaForm="ngForm" (ngSubmit)="postTarefa(tarefaForm)">
+      <div class="form-group">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" [(ngModel)]="novaTarefa.nome" required>
+      </div>
+
+      <div class="form-group">
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" name="descricao" [(ngModel)]="novaTarefa.descricao"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select name="status" id="status" [(ngModel)]="novaTarefa.status">
+          <option value="1">A fazer</option>
+          <option value="2">Em andamento</option>
+          <option value="3">Concluído</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="usuarioId">ID do Usuário (opcional):</label>
+        <input type="number" name="usuarioId" id="usuarioId" [(ngModel)]="novaTarefa.usuarioId" min="0"
+          #usuarioIdInput="ngModel">
+        <div *ngIf="usuarioIdInput.invalid && (usuarioIdInput.dirty || usuarioIdInput.touched)" class="mensagem-erro">
+          <div *ngIf="usuarioIdInput.errors?.['min']">
+            O ID do usuário não pode ser menor que 0
+          </div>
+        </div>
+      </div>
+      <button type="submit">Adicionar Tarefa</button>
+    </form>
+  </div>
+</div>
+
+
+<!-- <ul>
+  <li *ngFor="let item of tarefas">
+    {{ item.nome }} - {{ item.descricao }} - {{ item.status }} - {{ item.usuarioId }}
+  </li>
+</ul>
+<div>
+  <form action="" method="post">
+    <label>Nome da tarefa: <input type="text"></label><br>
+    <label>Descrição: <input type="text"></label><br>
+    <label>ID do Usuário: <input type="text"></label><br>
+    <label>Status:
+      <select>
+        <option value="1">A fazer</option>
+        <option value="2">Em andamento</option>
+        <option value="3">Concluído</option>
+      </select>
+    </label>
+  </form>
+  <button (click)="criarTarefa()">Nova Tarefa</button>
+</div> -->
