@@ -28,9 +28,18 @@
           <td>{{ tarefa.id }}</td>
           <td>{{ tarefa.nome }}</td>
           <td>{{ tarefa.descricao}}</td>
-          <td>{{ getStatusText(tarefa.status) }}</td>
-          <td>{{ tarefa.usuarioId || '-' }}</td>
           <td>
+            <select [(ngModel)]="tarefa.status" (change)="putTarefa(tarefa.id, tarefa)">
+              <option value="1" [selected]="tarefa.status === 1">A fazer</option>
+              <option value="2" [selected]="tarefa.status === 2">Em andamento</option>
+              <option value="3" [selected]="tarefa.status === 3">Concluído</option>
+            </select>
+          </td>
+          <td>
+              {{ tarefa.usuarioId ? 'Designado para: ' + tarefa.usuarioId : 'Não designada' }}
+          </td>
+          <td>
+            <button class="btn-att" (click)="putTarefa(tarefa.id, tarefa)">Atualizar</button>
             <button (click)="deleteTarefas(tarefa.id)">Excluir</button>
           </td>
         </tr>

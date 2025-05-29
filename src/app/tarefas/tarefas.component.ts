@@ -68,16 +68,54 @@ export class TarefasComponent implements OnInit {
       next: (data) => {
         console.log('Tarefa criada com sucesso:', data);
         this.getTarefas(); // Atualiza a lista de tarefas após criar
-        form.resetForm();
-        this.novaTarefa = {
-          nome: '',
-          descricao: '',
-          status: 1,
-          usuarioId: undefined // Defina o usuárioId conforme necessário
-        }; // Reseta o formulário após a criação
+        // form.resetForm();
+        // this.novaTarefa = {
+        //   nome: '',
+        //   descricao: '',
+        //   status: 1,
+        //   usuarioId: undefined 
+        // } // Reseta o formulário após a criação
       },
       error: (error) => {
         console.error('Erro ao criar tarefa:', error);
+      }
+    });
+  }
+
+  putTarefa(id: number, tarefa: Tarefa) {
+
+    const tarefaAtualizada = {
+      id: tarefa.id,
+      nome: tarefa.nome,
+      descricao: tarefa.descricao,
+      status: typeof tarefa.status === 'string' ? parseInt(tarefa.status) : tarefa.status,
+      usuario: tarefa.usuario
+    };
+
+    console.log('Enviando para API:', tarefaAtualizada); // Para debug
+
+    this.tarefaService.putTarefas(id, tarefaAtualizada).subscribe({
+      next: (data) => {
+        console.log('Tarefa atualizada com sucesso:', data);
+        const index = this.tarefas.findIndex(t => t.id === id);
+        if (index !== -1) {
+        this.tarefas[index] = { ...tarefaAtualizada };
+        this.filtrarTarefas();
+        // form.resetForm();
+        // this.novaTarefa = {
+        //   nome: '',
+        //   descricao: '',
+        //   status: 1,
+        //   usuarioId: undefined 
+        // } // Reseta o formulário após a criação
+        
+        }
+      },
+      error: (error) => {
+        console.error('Erro ao atualizar tarefa:', error);
+      },
+      complete: () => {
+        console.log('Requisição de atualização de tarefa concluída');
       }
     });
   }
@@ -108,6 +146,4 @@ export class TarefasComponent implements OnInit {
       default: return 'Desconhecido';
     }
   }
-
-
 }
